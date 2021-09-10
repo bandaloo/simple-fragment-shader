@@ -18,6 +18,9 @@ void main(){
   fragColor = vec4(col,1.0);
 }`;
 
+// n.b. the `#version` pragma in the each shader has to be the very first line.
+// there can't be any kind of whitespace before it or it will break!
+
 const RES_WIDTH = 1920;
 const RES_HEIGHT = 1080;
 
@@ -29,9 +32,6 @@ const shaderLog = (
   const output = gl.getShaderInfoLog(shader);
   if (output !== "") console.log(`${name} shader info log\n${output}`);
 };
-
-// n.b. the `#version` pragma in the fragment shader has to be the very first
-// line. there can't be any kind of whitespace before it or it will break!
 
 const canvas = /** @type {HTMLCanvasElement} */ (document.getElementById("gl"));
 const gl = canvas.getContext("webgl2");
@@ -51,8 +51,8 @@ gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
 const verts = [-1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, 1];
 const triangles = new Float32Array(verts);
 
-// initialize memory for buffer and populate it
-// give opengl hint that contents will not change dynamically
+// initialize memory for buffer, populate it and give opengl hint that contents
+// will not change dynamically
 gl.bufferData(gl.ARRAY_BUFFER, triangles, gl.STATIC_DRAW);
 
 // create vertex shader
@@ -77,14 +77,14 @@ gl.useProgram(program);
 // n.b. all attribute and uniform initialization must come after creating,
 // linking and using the shader program
 
-// find a pointer to the uniform "time" in our fragment shader
+// get location of the uniform `uTime` in our fragment shader
 const uTime = gl.getUniformLocation(program, "uTime");
 
-// find a pointer to the uniform "time" in our fragment shader
+// get location of the uniform `uResolution` in our fragment shader
 const uResolution = gl.getUniformLocation(program, "uResolution");
 gl.uniform2f(uResolution, gl.drawingBufferWidth, gl.drawingBufferHeight);
 
-// get position attribute location in shader
+// get location of the attribute `aPosition` in our vertex shader
 const position = gl.getAttribLocation(program, "aPosition");
 
 // enable the attribute
